@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:collezione_topolino/screens/search_screen/search_screen.dart';
+
 import './components/main_shelf.dart';
 
 class MyHome extends StatelessWidget {
@@ -20,7 +22,10 @@ class MyHome extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const SearchScreen()));
+            },
             icon: const Icon(
               Icons.search,
             ),
