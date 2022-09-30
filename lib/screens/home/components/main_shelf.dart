@@ -1,15 +1,14 @@
-import 'package:collezione_topolino/blocs/database_bloc.dart';
-import 'package:collezione_topolino/events/database_events.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:collezione_topolino/components/order_select.dart';
-import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
-
+import 'package:collezione_topolino/blocs/database_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
 import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/events/database_events.dart';
+import 'package:collezione_topolino/components/order_select.dart';
+import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 
 class MainShelf extends StatefulWidget {
   const MainShelf({Key? key}) : super(key: key);
@@ -63,6 +62,7 @@ class _MainShelfState extends State<MainShelf> {
                         ).querySink.add(
                               FetchByNumberEvent(e.number),
                             );
+                        // Push view
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
