@@ -19,6 +19,7 @@ class MainShelf extends StatefulWidget {
 
 class _MainShelfState extends State<MainShelf> {
   int _orderBy = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,7 +55,7 @@ class _MainShelfState extends State<MainShelf> {
                         Provider.of<IssueBloc>(
                           context,
                           listen: false,
-                        ).query.sink.add(e.url.toString());
+                        ).query.sink.add(e.number);
                         // Load data from database
                         Provider.of<DatabaseBloc>(
                           context,

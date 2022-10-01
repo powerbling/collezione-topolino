@@ -24,7 +24,7 @@ class ResultElement extends StatelessWidget {
         Provider.of<IssueBloc>(
           context,
           listen: false,
-        ).query.sink.add(publ.url);
+        ).query.sink.add(publ.number);
         Provider.of<DatabaseBloc>(
           context,
           listen: false,

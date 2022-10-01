@@ -10,6 +10,8 @@ class API {
   static const String _publicationUrl =
       "${_baseUrl}publication.php?pg=img&c=it/TL";
 
+  static const String _issueUrl = "${_baseUrl}issue.php?c=it%2FTL";
+
   static final DateFormat dateFormatFull = DateFormat('yyyy-MM-dd');
   static final DateFormat dateFormatReduced = DateFormat('yyyy-MM');
 
@@ -49,14 +51,15 @@ class API {
     return publications;
   }
 
-  Future<Issue> fetchIssue(String url) async {
+  Future<Issue> fetchIssue(int toFetch) async {
     int? number;
     String? imageUrl;
     String? imageHRUrl;
     DateTime? dateTime;
 
     await http
-        .get(Uri.parse(url))
+        .get(Uri.parse(
+            _issueUrl + toFetch.toString().padLeft(5, '+'))) // Compose url
         .then((res) => res.body)
         .then(parse)
         .then((html) {
