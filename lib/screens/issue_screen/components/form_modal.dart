@@ -1,12 +1,8 @@
+import 'package:collezione_topolino/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:collezione_topolino/blocs/database_bloc.dart';
 import 'package:collezione_topolino/components/date_field.dart';
-import 'package:collezione_topolino/events/database_events.dart';
 import 'package:collezione_topolino/models/physical_copy.dart';
-
-import '../services/functions.dart';
 
 class FormModal extends StatefulWidget {
   const FormModal({
@@ -99,21 +95,13 @@ class _FormModalState extends State<FormModal> {
             child: const Text("Aggiungi alla collezione"),
             onPressed: () {
               // Add the new copy
-              Provider.of<DatabaseBloc>(
-                context,
-                listen: false,
-              ).querySink.add(
-                    AddEvent(
-                      PhysicalCopy(
-                        condition: _copyCondition!,
-                        dateAdded: _selectedDate!,
-                        number: widget.issueNumber,
-                      ),
-                    ),
-                  );
-
-              // Force refresh for the UI
-              forceFetch(context, widget.issueNumber);
+              DatabaseConnection().insertCopy(
+                PhysicalCopy(
+                  condition: _copyCondition!,
+                  dateAdded: _selectedDate!,
+                  number: widget.issueNumber,
+                ),
+              );
 
               // Exit the modal
               Navigator.pop(context);

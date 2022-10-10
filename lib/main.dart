@@ -1,7 +1,8 @@
-import 'package:collezione_topolino/blocs/database_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
 import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/services/api.dart';
+import 'package:collezione_topolino/services/database.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
         Provider<PublicationBloc>(
           create: (_) => PublicationBloc(API()),
         ),
-        Provider<DatabaseBloc>(
-          create: (_) => DatabaseBloc(),
+        ChangeNotifierProvider(
+          create: (_) => DatabaseConnection(),
         ),
       ],
       child: MaterialApp(

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:collezione_topolino/blocs/database_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
-import 'package:collezione_topolino/events/database_events.dart';
 import 'package:collezione_topolino/models/publication.dart';
 import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 
@@ -25,10 +23,6 @@ class ResultElement extends StatelessWidget {
           context,
           listen: false,
         ).query.sink.add(publ.number);
-        Provider.of<DatabaseBloc>(
-          context,
-          listen: false,
-        ).querySink.add(FetchByNumberEvent(publ.number));
 
         // Push view
         Navigator.push(

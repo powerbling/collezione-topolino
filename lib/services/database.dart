@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 
 import 'package:collezione_topolino/models/physical_copy.dart';
 
-class DatabaseConnection {
+class DatabaseConnection with ChangeNotifier {
   static DatabaseConnection? _instance;
 
   DatabaseConnection._();
@@ -45,6 +45,8 @@ class DatabaseConnection {
       'Copies',
       copy.toMap(),
     );
+
+    notifyListeners();
   }
 
   Future<void> removeCopy(int id) async {
@@ -55,6 +57,8 @@ class DatabaseConnection {
       where: 'id = ?',
       whereArgs: [id],
     );
+
+    notifyListeners();
   }
 
   Future<void> removeAllByNumber(int number) async {
@@ -65,6 +69,8 @@ class DatabaseConnection {
       where: 'number = ?',
       whereArgs: [number],
     );
+
+    notifyListeners();
   }
 
   Future<void> updateCopy(PhysicalCopy copy) async {
@@ -74,6 +80,8 @@ class DatabaseConnection {
       'Copies',
       copy.toMap(),
     );
+
+    notifyListeners();
   }
 
   Future<List<PhysicalCopy?>> fetchAllCopies() async {

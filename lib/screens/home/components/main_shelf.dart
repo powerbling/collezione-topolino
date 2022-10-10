@@ -1,13 +1,10 @@
-import 'package:collezione_topolino/models/physical_copy.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:collezione_topolino/blocs/database_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
 import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/models/publication.dart';
-import 'package:collezione_topolino/events/database_events.dart';
 import 'package:collezione_topolino/components/order_select.dart';
 import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 
@@ -57,13 +54,6 @@ class _MainShelfState extends State<MainShelf> {
                           context,
                           listen: false,
                         ).query.sink.add(e.number);
-                        // Load data from database
-                        Provider.of<DatabaseBloc>(
-                          context,
-                          listen: false,
-                        ).querySink.add(
-                              FetchByNumberEvent(e.number),
-                            );
                         // Push view
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -106,7 +96,7 @@ class _MainShelfState extends State<MainShelf> {
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                            "${e.number}",
+                              "${e.number}",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
