@@ -1,3 +1,4 @@
+import 'package:collezione_topolino/models/physical_copy.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -76,10 +77,38 @@ class _MainShelfState extends State<MainShelf> {
                           CachedNetworkImage(
                             imageUrl: e.imgUrl,
                             height: 100.0,
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                height: 100.0,
+                                width: 100.0 * 0.739, // Correct aspect-ratio
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        blurRadius: 2.0,
+                                        color: Colors.grey,
+                                        offset: Offset(1.0, 1.0)),
+                                  ],
+                                  border: Border.all(
+                                    color: Colors.grey[600]!,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(2.0),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          Text(
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
                             "${e.number}",
-                            style: Theme.of(context).textTheme.caption,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
                           ),
                         ],
                       ),
