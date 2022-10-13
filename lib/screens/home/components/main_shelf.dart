@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
 import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/models/publication.dart';
 import 'package:collezione_topolino/components/order_select.dart';
 import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
+import 'copy_display.dart';
 
 class MainShelf extends StatefulWidget {
   const MainShelf({Key? key}) : super(key: key);
@@ -46,57 +46,29 @@ class _MainShelfState extends State<MainShelf> {
                   _orderBy != 0 ? snapshot.data : snapshot.data!.reversed;
               return GridView.count(
                   crossAxisCount: 3,
-                  children: data!.map((e) {
+                  children: data!.map((element) {
                     return InkWell(
                       onTap: () {
                         // Load data from api
                         Provider.of<IssueBloc>(
                           context,
                           listen: false,
-                        ).query.sink.add(e.number);
+                        ).query.sink.add(element.number);
                         // Push view
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
-                                IssueScreen(issueNumber: e.number),
+                                IssueScreen(issueNumber: element.number),
                           ),
                         );
                       },
                       child: Column(
                         children: [
-                          CachedNetworkImage(
-                            imageUrl: e.imgUrl,
-                            height: 100.0,
-                            imageBuilder: (context, imageProvider) {
-                              return Container(
-                                height: 100.0,
-                                width: 100.0 * 0.739, // Correct aspect-ratio
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        blurRadius: 2.0,
-                                        color: Colors.grey,
-                                        offset: Offset(1.0, 1.0)),
-                                  ],
-                                  border: Border.all(
-                                    color: Colors.grey[600]!,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(2.0),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                          CopyDisplay(copy: element),
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              "${e.number}",
+                              "${element.number}",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
