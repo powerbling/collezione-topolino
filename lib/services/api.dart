@@ -6,7 +6,7 @@ import 'package:html/parser.dart' show parse;
 import 'package:intl/intl.dart';
 
 class API {
-  static const String _baseUrl = "https://inducks.org/";
+  static const String _baseUrl = "http://inducks.org/";
   static const String _publicationUrl =
       "${_baseUrl}publication.php?pg=img&c=it/TL";
 
@@ -103,7 +103,7 @@ class API {
       dateTime: dateTime ?? DateTime.now(),
       imgUrl: imageUrl != null
           ? _baseUrl + (imageUrl ?? "")
-          : "https://via.placeholder.com/150",
+          : "http://via.placeholder.com/150",
       imgHRUrl: imageHRUrl != null ? _baseUrl + (imageHRUrl ?? "") : null,
     );
   }
