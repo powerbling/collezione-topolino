@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:collezione_topolino/blocs/issue_bloc.dart';
 import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/models/physical_copy.dart';
+import 'package:collezione_topolino/services/database.dart';
 import 'package:collezione_topolino/components/order_select.dart';
-import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
-import 'copy_display.dart';
+
+import 'copies_grid.dart';
 
 class MainShelf extends StatefulWidget {
   const MainShelf({Key? key}) : super(key: key);
@@ -42,40 +43,22 @@ class _MainShelfState extends State<MainShelf> {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              var data =
-                  _orderBy != 0 ? snapshot.data : snapshot.data!.reversed;
-              return GridView.count(
-                  crossAxisCount: 3,
-                  children: data!.map((element) {
-                    return InkWell(
-                      onTap: () {
-                        // Load data from api
-                        Provider.of<IssueBloc>(
-                          context,
-                          listen: false,
-                        ).query.sink.add(element.number);
-                        // Push view
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                IssueScreen(issueNumber: element.number),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          CopyDisplay(copy: element),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              "${element.number}",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                          ),
-                        ],
-                      ),
+              final data = _orderBy != 0
+                  ? snapshot.data
+                  : snapshot.data!.reversed.toList();
+              return Consumer<DatabaseConnection>(
+                builder: (context, connection, child) =>
+                    FutureBuilder<List<PhysicalCopy?>>(
+                  future: connection.fetchAllCopies(),
+                  initialData: const [],
+                  builder: (context, snapshot) {
+                    return CopiesGrid(
+                      issues: data,
+                      copies: snapshot.data,
                     );
-                  }).toList());
+                  },
+                ),
+              );
             },
           ),
         ),
