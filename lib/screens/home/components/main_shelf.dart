@@ -6,6 +6,7 @@ import 'package:collezione_topolino/models/publication.dart';
 import 'package:collezione_topolino/models/physical_copy.dart';
 import 'package:collezione_topolino/services/database.dart';
 import 'package:collezione_topolino/components/order_select.dart';
+import 'package:collezione_topolino/components/custom_scroller.dart';
 
 import 'copies_grid.dart';
 
@@ -18,6 +19,7 @@ class MainShelf extends StatefulWidget {
 
 class _MainShelfState extends State<MainShelf> {
   int _orderBy = 0;
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,15 @@ class _MainShelfState extends State<MainShelf> {
                   future: connection.fetchAllCopies(),
                   initialData: const [],
                   builder: (context, snapshot) {
-                    return CopiesGrid(
-                      issues: data,
-                      copies: snapshot.data,
+                    return CustomScroller(
+                      totalAmount: data!.length,
+                      scrollController: _scrollController,
+                      titleBuilder: (index) => data[index].number,
+                      child: CopiesGrid(
+                        issues: data,
+                        copies: snapshot.data,
+                        scrollController: _scrollController,
+                      ),
                     );
                   },
                 ),

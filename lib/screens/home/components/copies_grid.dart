@@ -11,11 +11,13 @@ import 'copy_display.dart';
 class CopiesGrid extends StatelessWidget {
   final Iterable<Publication>? issues;
   final List<PhysicalCopy?>? copies;
+  final ScrollController? scrollController;
 
   const CopiesGrid({
     super.key,
-    this.issues,
-    this.copies,
+    required this.issues,
+    required this.copies,
+    required this.scrollController,
   });
 
   static int copyCount(List<PhysicalCopy?>? copies, int number) {
@@ -25,6 +27,7 @@ class CopiesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+        controller: scrollController,
         crossAxisCount: 3,
         children: issues!.map((element) {
           final amount = copyCount(copies, element.number);
