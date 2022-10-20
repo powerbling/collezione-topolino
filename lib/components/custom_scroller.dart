@@ -70,9 +70,9 @@ class _CustomScrollerState extends State<CustomScroller> {
         RawScrollbar(
           interactive: true,
           thumbVisibility: false,
-          thickness: 10.0,
-          mainAxisMargin: 5.0,
-          radius: const Radius.circular(5.0),
+          thickness: 15.0,
+          crossAxisMargin: 5.0,
+          radius: const Radius.circular(10.0),
           minThumbLength: 50.0,
           controller: widget._scrollController,
           child: widget.child,
