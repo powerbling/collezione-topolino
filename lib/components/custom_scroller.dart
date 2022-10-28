@@ -21,7 +21,7 @@ class CustomScroller extends StatefulWidget {
 }
 
 class _CustomScrollerState extends State<CustomScroller> {
-  dynamic _currentElement;
+  int? _currentElement;
   Timer? _visibilityTimer;
   bool _overlayVisible = false;
 
@@ -33,7 +33,7 @@ class _CustomScrollerState extends State<CustomScroller> {
           (pos.pixels / pos.maxScrollExtent * (widget.totalAmount - 1)).round();
       _visibilityTimer?.cancel(); // Reset timer if already started
       setState(() {
-        _currentElement = widget.titleBuilder?.call(index) ?? index;
+        _currentElement = index;
 
         _overlayVisible = true; // Show overlay
       });
@@ -43,10 +43,6 @@ class _CustomScrollerState extends State<CustomScroller> {
           () => _overlayVisible = false, // Hide overlay after n seconds
         ),
       );
-    } else {
-      setState(() {
-        _currentElement = null;
-      });
     }
   }
 
@@ -91,7 +87,8 @@ class _CustomScrollerState extends State<CustomScroller> {
                   dimension: 150.0,
                   child: Center(
                       child: Text(
-                    _currentElement.toString(),
+                    widget.titleBuilder?.call(_currentElement!).toString() ??
+                        _currentElement.toString(),
                     style: Theme.of(context)
                         .textTheme
                         .displaySmall
