@@ -25,9 +25,10 @@ jobs:
     - run: flutter pub get
     # Now build apk
     - run: flutter build apk --build-name $VERSION
-    # now relase the just created build
-    - name: Create a Release APK
-      uses: ncipollo/release-action@v1
+    # release the build
+    - name: Set Release APK
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        artifacts: "build/app/outputs/apk/release/*.apk"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        files: "build/app/outputs/apk/release/*.apk"
