@@ -6,9 +6,10 @@ jobs:
   build-and-test: 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v3
     # we need java to build android apks
-    - uses: actions/setup-java@v1
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1
       with:
         java-version: '12.x'
     # this flutter action does the heavy lifting for us
@@ -22,13 +23,15 @@ jobs:
         echo Version: $VERSION
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     # get packages as you used to in your computer
-    - run: flutter pub get
+    - name: Get Flutter Packages
+      run: flutter pub get
     # Now build apk
-    - run: flutter build apk --build-name $VERSION
+    - name: Build Flutter Application
+      run: flutter build apk --build-name $VERSION
     # release the build
-    - name: Set Release APK
-      uses: "marvinpinto/action-automatic-releases@latest"
+    - name: Upload Release APK
+      uses: softprops/action-gh-release@v1
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
         files: "build/app/outputs/apk/release/*.apk"
