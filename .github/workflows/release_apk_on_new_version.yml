@@ -24,7 +24,7 @@ jobs:
     # get packages as you used to in your computer
     - run: flutter pub get
     # Now build apk
-    - run: flutter build apk --build-name ${{ VERSION }}
+    - run: flutter build apk --build-name ${ VERSION }
     # now relase the just created build
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
