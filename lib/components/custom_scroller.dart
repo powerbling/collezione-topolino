@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 class CustomScroller extends StatefulWidget {
   final Widget child;
   final int totalAmount;
-  final Function(int)? titleBuilder;
+  final Function(int?)? titleBuilder;
   final ScrollController _scrollController;
 
   CustomScroller({
@@ -87,7 +87,7 @@ class _CustomScrollerState extends State<CustomScroller> {
                   dimension: 150.0,
                   child: Center(
                       child: Text(
-                    widget.titleBuilder?.call(_currentElement!).toString() ??
+                    widget.titleBuilder?.call(_currentElement).toString() ??
                         _currentElement.toString(),
                     style: Theme.of(context)
                         .textTheme

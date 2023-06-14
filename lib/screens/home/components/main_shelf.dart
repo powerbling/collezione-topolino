@@ -57,7 +57,8 @@ class _MainShelfState extends State<MainShelf> {
                     return CustomScroller(
                       totalAmount: data!.length,
                       scrollController: _scrollController,
-                      titleBuilder: (index) => data[index].number,
+                      titleBuilder: (index) =>
+                          (index == null) ? null : data[index].number,
                       child: CopiesGrid(
                         issues: data,
                         copies: snapshot.data,
