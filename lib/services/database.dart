@@ -95,7 +95,7 @@ class DatabaseConnection with ChangeNotifier {
   Future<PhysicalCopy?> fetchCopy(int id) async {
     final db = await database;
 
-    final Map<String, dynamic>? asMap = (await db.query(
+    final Map<String, dynamic> asMap = (await db.query(
       'Copies',
       where: 'id = ?',
       whereArgs: [id],

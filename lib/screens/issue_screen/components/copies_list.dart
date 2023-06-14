@@ -73,12 +73,12 @@ class CopiesList extends StatelessWidget {
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(false),
-                                    child: Text("Annulla"),
+                                    child: const Text("Annulla"),
                                   ),
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(true),
-                                    child: Text("Elimina"),
+                                    child: const Text("Elimina"),
                                   ),
                                 ],
                               ),

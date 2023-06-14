@@ -34,10 +34,10 @@ class InsertModal extends ModalRoute {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return Scaffold(
+    return const Scaffold(
       
       body: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding: EdgeInsets.symmetric(
           horizontal: 20.0,
           vertical: 10.0,
         ),
