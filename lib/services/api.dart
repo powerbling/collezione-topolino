@@ -6,7 +6,7 @@ import 'package:html/parser.dart' show parse;
 import 'package:intl/intl.dart';
 
 class API {
-  static const String _baseUrl = "http://inducks.org/";
+  static const String _baseUrl = "https://inducks.org/";
   static const String _publicationUrl =
       "${_baseUrl}publication.php?pg=img&c=it/TL";
 
