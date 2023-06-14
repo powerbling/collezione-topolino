@@ -14,14 +14,20 @@ jobs:
     # this flutter action does the heavy lifting for us
     - uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'  
+        channel: 'stable'
+    # Store the version, stripping any v-prefix
+    - name: Write release version
+      run: |
+        VERSION=${GITHUB_REF_NAME#v}
+        echo Version: $VERSION
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
     # get packages as you used to in your computer
     - run: flutter pub get
     # Now build apk
-    - run: flutter build apk
+    - run: flutter build apk --build-name ${{ VERSION }}
     # now relase the just created build
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/apk/release/*.apk"
-        token: ${{ secrets.BUILD_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
