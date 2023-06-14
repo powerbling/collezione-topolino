@@ -51,7 +51,7 @@ class _OrderSelectState extends State<OrderSelect> {
               children: [
                 Text(
                   "Ordine",
-                  style: Theme.of(context).textTheme.button,
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 Icon(
                   _menuItems[_orderBy] == "Crescente"

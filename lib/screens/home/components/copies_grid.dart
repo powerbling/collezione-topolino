@@ -52,7 +52,7 @@ class CopiesGrid extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color:
-                        amount > 0 ? Theme.of(context).backgroundColor : null,
+                        amount > 0 ? Theme.of(context).colorScheme.background : null,
                     borderRadius: BorderRadius.circular(6.0),
                   ),
                   child: Column(

@@ -44,7 +44,7 @@ class CopiesList extends StatelessWidget {
                   ),
                   child: Text(
                     "Copie salvate:",
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 ListView.builder(

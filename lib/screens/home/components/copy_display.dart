@@ -78,7 +78,7 @@ class CopyDisplay extends StatelessWidget {
                       fit: BoxFit.fitWidth,
                     ),
                     border: Border.all(
-                      strokeAlign: StrokeAlign.inside,
+                      strokeAlign: BorderSide.strokeAlignCenter,
                       color: Colors.grey[600]!,
                       width: 1.0,
                     ),
