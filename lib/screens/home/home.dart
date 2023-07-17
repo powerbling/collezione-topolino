@@ -1,3 +1,4 @@
+import 'package:collezione_topolino/screens/import_screen/import_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:collezione_topolino/screens/search_screen/search_screen.dart';
@@ -30,6 +31,15 @@ class MyHome extends StatelessWidget {
               Icons.search,
             ),
           ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ImportScreen()));
+            },
+            icon: const Icon(
+              Icons.settings,
+            ),
+          )
         ],
       ),
       body: const Center(

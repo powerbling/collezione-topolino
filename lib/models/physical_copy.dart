@@ -45,6 +45,14 @@ class PhysicalCopy {
         dateAdded: DateTime.fromMillisecondsSinceEpoch(map['dateAdded']),
       );
 
+  // Copy except id
+  factory PhysicalCopy.fromOther(PhysicalCopy copy) => PhysicalCopy(
+        number: copy.number,
+        reprint: copy.reprint,
+        condition: copy.condition,
+        dateAdded: copy.dateAdded,
+      );
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
