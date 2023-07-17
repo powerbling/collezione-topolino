@@ -102,9 +102,9 @@ class API {
       number: number ?? 0,
       dateTime: dateTime ?? DateTime.now(),
       imgUrl: imageUrl != null
-          ? _baseUrl + (imageUrl ?? "")
+          ? _baseUrl + (imageUrl!)
           : "http://via.placeholder.com/150",
-      imgHRUrl: imageHRUrl != null ? _baseUrl + (imageHRUrl ?? "") : null,
+      imgHRUrl: imageHRUrl != null ? _baseUrl + (imageHRUrl!) : null,
     );
   }
 }

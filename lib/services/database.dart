@@ -84,7 +84,7 @@ class DatabaseConnection with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<PhysicalCopy?>> fetchAllCopies() async {
+  Future<List<PhysicalCopy>> fetchAllCopies() async {
     final db = await database;
 
     final List<Map<String, dynamic>> asMaps = await db.query('Copies');
@@ -101,12 +101,10 @@ class DatabaseConnection with ChangeNotifier {
       whereArgs: [id],
     ))[0];
 
-    if (asMap == null) return null;
-
     return PhysicalCopy.fromMap(asMap);
   }
 
-  Future<List<PhysicalCopy?>> fetchByNumber(int number) async {
+  Future<List<PhysicalCopy>> fetchByNumber(int number) async {
     final db = await database;
 
     final List<Map<String, dynamic>> asMaps = await db.query(
