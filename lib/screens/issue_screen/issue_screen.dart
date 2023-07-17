@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // External components
+import '../../components/copies_list.dart';
+import '../../models/physical_copy.dart';
+import '../../services/database.dart';
 import 'components/form_modal.dart';
 import 'components/issue_info.dart';
-import 'components/copies_list.dart';
 
 class IssueScreen extends StatelessWidget {
   final int issueNumber;
@@ -22,7 +25,31 @@ class IssueScreen extends StatelessWidget {
       body: ListView(
         children: [
           const IssueInfo(),
-          CopiesList(issueNumber: issueNumber),
+          Consumer<DatabaseConnection>(
+            builder: (context, connection, child) {
+              return FutureBuilder<List<PhysicalCopy?>>(
+                future: connection.fetchByNumber(issueNumber),
+                builder: (context, snapshot) {
+                  // Indicate wether there is data
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(
+                        child: Text(
+                      "No copie salvate",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
+                    ));
+                  }
+                  final copies = snapshot.data!;
+                  return CopiesList(
+                    copies: copies,
+                    deletable: true,
+                  );
+                },
+              );
+            },
+          ),
           const SizedBox(
             height: 80.0,
           ),
