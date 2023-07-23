@@ -42,9 +42,23 @@ class IssueScreen extends StatelessWidget {
                     ));
                   }
                   final copies = snapshot.data!;
-                  return CopiesList(
-                    copies: copies,
-                    deletable: true,
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 5.0,
+                        ),
+                        child: Text(
+                          "Copie salvate:",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      CopiesList(
+                        copies: copies,
+                        deletable: true,
+                      ),
+                    ],
                   );
                 },
               );
