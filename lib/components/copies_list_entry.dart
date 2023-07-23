@@ -54,15 +54,24 @@ class CopiesListEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onLongPress: deletable ? _deleteDialog(context, copy) : null,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("${index + 1}"),
-          Text("Aggiunto: ${dateFormat.format(copy.dateAdded)}"),
-          Text("Stato: ${conditionString(copy.condition)}"),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: Theme.of(context).primaryColorLight,
+        ),
+        child: ListTile(
+          onLongPress: deletable ? _deleteDialog(context, copy) : null,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${index + 1}"),
+              Text("Aggiunto: ${dateFormat.format(copy.dateAdded)}"),
+              Text("Stato: ${conditionString(copy.condition)}"),
+            ],
+          ),
+        ),
       ),
     );
   }
