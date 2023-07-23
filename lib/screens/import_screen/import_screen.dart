@@ -62,6 +62,10 @@ class _ImportScreenState extends State<ImportScreen> {
             return ImportModal(confirmation: c);
           },
         );
+      }).onDone(() {
+        print('finito');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Finito: Importato la collezione.")));
       });
     };
   }
@@ -97,8 +101,7 @@ class _ImportScreenState extends State<ImportScreen> {
             ElevatedButton(
               onPressed: () async {
                 FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['topo', 'db'],
+                  type: FileType.any,
                 );
 
                 setState(() {

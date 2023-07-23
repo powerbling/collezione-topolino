@@ -58,9 +58,9 @@ class StoreImporter {
     }
   }
 
-  Future<Database> get store async => _store ??= await initStore();
+  Future<Database> get store async => _store ??= await _initStore();
 
-  Future<Database> initStore() async {
+  Future<Database> _initStore() async {
     return await openDatabase(
       _storePath,
       version: 1,
@@ -68,7 +68,7 @@ class StoreImporter {
     );
   }
 
-  Future<List<PhysicalCopy>> fetchStoreCopies() async {
+  Future<List<PhysicalCopy>> _fetchStoreCopies() async {
     final st = await store;
 
     final List<Map<String, dynamic>> asMaps = await st.query('Copies');
@@ -76,25 +76,34 @@ class StoreImporter {
     return List.generate(asMaps.length, (i) => PhysicalCopy.fromMap(asMaps[i]));
   }
 
-  void registerCopy(PhysicalCopy copy) {
+  void _registerCopy(PhysicalCopy copy) {
     // Purge id to avoid db collision
     final insertable = PhysicalCopy.fromOther(copy);
     _dbConn.insertCopy(insertable);
   }
 
+  // Call only after starting store
+  void _closeStore() {
+    _store?.close();
+  }
+
   Stream<ImportConfirmation> executeMerge() async* {
-    final copies = await fetchStoreCopies();
+    final copies = await _fetchStoreCopies();
 
     for (PhysicalCopy c in copies) {
       // Check for already present copies
       final tweens = await _dbConn.fetchByNumber(c.number);
-      if (tweens.isEmpty) registerCopy(c);
+      if (tweens.isEmpty) {
+        _registerCopy(c);
+      } else {
+        final importConfirmation = ImportConfirmation(copy: c);
+        yield importConfirmation;
 
-      final importConfirmation = ImportConfirmation(copy: c);
-      yield importConfirmation;
-
-      // Wait for user to confirm or reject the merge
-      if (await importConfirmation.confirmation()) registerCopy(c);
+        // Wait for user to confirm or reject the merge
+        if (await importConfirmation.confirmation()) _registerCopy(c);
+      }
     }
+
+    _closeStore();
   }
 }
