@@ -32,59 +32,74 @@ class _MainShelfState extends State<MainShelf> {
           });
         }),
         Expanded(
-          child: StreamBuilder<List<Publication>>(
-            stream: context.watch<PublicationBloc>().results,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                String errorString = "Errore, impossibile caricare i dati: ";
-                // Throw the received error to use builtin exception handling
-                try {
-                  throw snapshot.error!;
-                } on ExplainableException catch (e) {
-                  errorString += e.explainer;
-                } catch (e) {
-                  rethrow;
-                }
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      errorString,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge,
+          child: RefreshIndicator(
+            // notificationPredicate: (notification) => notification.depth == 4,
+            onRefresh: () => Future.delayed(
+                const Duration(seconds: 1), () => print('refresh')),
+            child: StreamBuilder<List<Publication>>(
+              stream: context.watch<PublicationBloc>().results,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  String errorString = "Errore, impossibile caricare i dati: ";
+                  // Throw the received error to use builtin exception handling
+                  try {
+                    throw snapshot.error!;
+                  } on ExplainableException catch (e) {
+                    errorString += e.explainer;
+                  } catch (e) {
+                    rethrow;
+                  }
+                  return LayoutBuilder(
+                    builder: (context, constraints) => SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minHeight: constraints.maxHeight),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              errorString,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final List<Publication> data = _orderBy != 0
+                    ? snapshot.data!
+                    : snapshot.data!.reversed.toList();
+
+                return Consumer<DatabaseConnection>(
+                  builder: (context, connection, child) =>
+                      FutureBuilder<List<PhysicalCopy?>>(
+                    future: connection.fetchAllCopies(),
+                    initialData: const [],
+                    builder: (context, snapshot) {
+                      return CustomScroller(
+                        totalAmount: data.length,
+                        scrollController: _scrollController,
+                        titleBuilder: (index) =>
+                            (index == null) ? null : data[index].number,
+                        child: CopiesGrid(
+                          issues: data,
+                          copies: snapshot.data,
+                          scrollController: _scrollController,
+                        ),
+                      );
+                    },
                   ),
                 );
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              final List<Publication> data = _orderBy != 0
-                  ? snapshot.data!
-                  : snapshot.data!.reversed.toList();
-
-              return Consumer<DatabaseConnection>(
-                builder: (context, connection, child) =>
-                    FutureBuilder<List<PhysicalCopy?>>(
-                  future: connection.fetchAllCopies(),
-                  initialData: const [],
-                  builder: (context, snapshot) {
-                    return CustomScroller(
-                      totalAmount: data.length,
-                      scrollController: _scrollController,
-                      titleBuilder: (index) =>
-                          (index == null) ? null : data[index].number,
-                      child: CopiesGrid(
-                        issues: data,
-                        copies: snapshot.data,
-                        scrollController: _scrollController,
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
+              },
+            ),
           ),
         ),
       ],
