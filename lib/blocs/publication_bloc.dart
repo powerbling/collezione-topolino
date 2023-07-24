@@ -15,8 +15,13 @@ class PublicationBloc {
   Stream<List<Publication>> get results => _results;
 
   PublicationBloc(this.api) {
-    Stream.fromFuture(api.fetchPublications()).listen((event) {
-      _controller.sink.add(event);
-    });
+    Stream.fromFuture(api.fetchPublications()).listen(
+      (event) {
+        _controller.sink.add(event);
+      },
+      onError: (error) {
+        _controller.sink.addError(error);
+      },
+    );
   }
 }

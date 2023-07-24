@@ -1,3 +1,4 @@
+import 'package:collezione_topolino/exceptions/explainable_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,19 +36,34 @@ class _MainShelfState extends State<MainShelf> {
             stream: context.watch<PublicationBloc>().results,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
+                String errorString = "Errore, impossibile caricare i dati: ";
+                // Throw the received error to use builtin exception handling
+                try {
+                  throw snapshot.error!;
+                } on ExplainableException catch (e) {
+                  errorString += e.explainer;
+                } catch (e) {
+                  rethrow;
+                }
                 return Center(
-                  child: Text(
-                    "Errore, impossibile caricare i dati: ${snapshot.error}",
-                    textAlign: TextAlign.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      errorString,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
                 );
               }
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final data = _orderBy != 0
-                  ? snapshot.data
+
+              final List<Publication> data = _orderBy != 0
+                  ? snapshot.data!
                   : snapshot.data!.reversed.toList();
+
               return Consumer<DatabaseConnection>(
                 builder: (context, connection, child) =>
                     FutureBuilder<List<PhysicalCopy?>>(
@@ -55,7 +71,7 @@ class _MainShelfState extends State<MainShelf> {
                   initialData: const [],
                   builder: (context, snapshot) {
                     return CustomScroller(
-                      totalAmount: data!.length,
+                      totalAmount: data.length,
                       scrollController: _scrollController,
                       titleBuilder: (index) =>
                           (index == null) ? null : data[index].number,

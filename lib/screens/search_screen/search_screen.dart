@@ -1,9 +1,10 @@
+import 'package:collezione_topolino/exceptions/explainable_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:collezione_topolino/blocs/publication_bloc.dart';
-import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/blocs/issue_bloc.dart';
+import 'package:collezione_topolino/models/issue.dart';
 import 'package:collezione_topolino/screens/search_screen/components/result_element.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  Publication? _result;
+  Issue? _result;
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +50,26 @@ class _SearchScreenState extends State<SearchScreen> {
                   return;
                 }
 
-                // Take parsed publications
-                final pubList = await Provider.of<PublicationBloc>(
-                  context,
-                  listen: false,
-                ).results.first;
+                // Query issue bloc
+                Provider.of<IssueBloc>(context, listen: false)
+                    .query
+                    .add(number);
 
-                // Filter publication by number
-                final filtered = pubList
-                    .where((publication) => publication.number == number);
+                try {
+                  final issue =
+                      await Provider.of<IssueBloc>(context, listen: false)
+                          .selected
+                          .first;
 
-                if (filtered.isEmpty) {
+                  setState(() {
+                    _result = issue;
+                  });
+                } on ExplainableException catch (e) {
                   setState(() {
                     _result = null;
                   });
-                  return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("ERRORE: ${e.explainer}")));
                 }
 
                 // TODO Implement saved copies counter on result item
@@ -76,10 +82,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 //   context,
                 //   listen: false,
                 // ).querySink.add(FetchByNumberEvent(number));
-
-                setState(() {
-                  _result = filtered.first;
-                });
               },
               decoration: InputDecoration(
                 prefixIcon:
@@ -112,7 +114,7 @@ class _SearchScreenState extends State<SearchScreen> {
             if (_result == null) {
               return const Center(child: Text("Nessun risultato"));
             }
-            return ResultElement(publ: _result!);
+            return ResultElement(issue: _result!);
           }(),
         ),
       ),
