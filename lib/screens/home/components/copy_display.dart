@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collezione_topolino/models/issue.dart';
 import 'package:flutter/material.dart';
 
 import 'package:collezione_topolino/models/publication.dart';
 
 class CopyDisplay extends StatelessWidget {
-  final Publication copy;
+  final IssueBase copy;
   final int amount;
 
   const CopyDisplay({
@@ -67,8 +68,10 @@ class CopyDisplay extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             CachedNetworkImage(
-              imageUrl: copy.imgUrl,
+              imageUrl: copy.imgUrl ?? "http://invalid.url",
               placeholder: (context, url) =>
+                  Image.asset('assets/placeholder_topolino.png'),
+              errorWidget: (context, url, error) =>
                   Image.asset('assets/placeholder_topolino.png'),
               imageBuilder: (context, imageProvider) {
                 return Container(

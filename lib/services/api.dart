@@ -33,8 +33,8 @@ class API {
   static final DateFormat dateFormatFull = DateFormat('yyyy-MM-dd');
   static final DateFormat dateFormatReduced = DateFormat('yyyy-MM');
 
-  Future<List<Publication>> fetchPublications() async {
-    List<Publication> publications = [];
+  static Future<List<IssueBase>> fetchAllIssues() async {
+    List<IssueBase> issues = [];
 
     RegExp regExp = RegExp(r"^\d+$");
 
@@ -58,15 +58,17 @@ class API {
                 var image = e.querySelector("img");
 
                 // Shortcut if any is null
-                if (link == null || image == null) return;
+                if (link == null) return;
 
                 if (regExp.hasMatch(link.innerHtml)) {
                   try {
-                    publications.add(
-                      Publication(
+                    issues.add(
+                      IssueBase(
                         number: int.parse(link.innerHtml),
                         url: _baseUrl + (link.attributes['href'] ?? ""),
-                        imgUrl: _baseUrl + (image.attributes['src'] ?? ""),
+                        imgUrl: image == null
+                            ? null
+                            : _baseUrl + (image.attributes['src'] ?? ""),
                       ),
                     );
                   } on FormatException {
@@ -84,10 +86,10 @@ class API {
       return Future.error(error);
     }
 
-    return publications;
+    return issues;
   }
 
-  Future<Issue> fetchIssue(int toFetch) async {
+  static Future<Issue> fetchIssue(int toFetch) async {
     int? number;
     String? imageUrl;
     String? imageHRUrl;
@@ -137,10 +139,9 @@ class API {
 
       return Issue(
         number: number ?? 0,
+        url: _issueUrl + toFetch.toString().padLeft(5, '+'),
         dateTime: dateTime ?? DateTime.now(),
-        imgUrl: imageUrl != null
-            ? _baseUrl + (imageUrl!)
-            : "http://via.placeholder.com/150",
+        imgUrl: imageUrl != null ? _baseUrl + (imageUrl!) : null,
         imgHRUrl: imageHRUrl != null ? _baseUrl + (imageHRUrl!) : null,
       );
     } catch (e) {

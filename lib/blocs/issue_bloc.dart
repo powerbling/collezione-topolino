@@ -13,7 +13,7 @@ class IssueBloc {
   Stream<Issue> get selected => _selected;
 
   IssueBloc(this.api) {
-    _selected = _query.stream.asyncMap(api.fetchIssue).asBroadcastStream();
+    _selected = _query.stream.asyncMap(API.fetchIssue).asBroadcastStream();
   }
 
   void dispose() {

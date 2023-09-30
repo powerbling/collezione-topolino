@@ -41,7 +41,7 @@ class ResultElement extends StatelessWidget {
                 width: 100.0,
                 child: Center(
                   child: CachedNetworkImage(
-                    imageUrl: issue.imgUrl,
+                    imageUrl: issue.imgUrl ?? "http://invalid.url",
                     imageBuilder: (context, imageProvider) {
                       return Container(
                         height: 100.0,

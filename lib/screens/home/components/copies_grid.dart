@@ -1,3 +1,4 @@
+import 'package:collezione_topolino/models/issue.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +10,7 @@ import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 import 'copy_display.dart';
 
 class CopiesGrid extends StatelessWidget {
-  final Iterable<Publication>? issues;
+  final Iterable<IssueBase>? issues;
   final List<PhysicalCopy?>? copies;
   final ScrollController? scrollController;
 
@@ -27,6 +28,7 @@ class CopiesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+        physics: const AlwaysScrollableScrollPhysics(),
         controller: scrollController,
         crossAxisCount: 3,
         children: issues!.map((element) {
@@ -51,8 +53,9 @@ class CopiesGrid extends StatelessWidget {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color:
-                        amount > 0 ? Theme.of(context).colorScheme.background : null,
+                    color: amount > 0
+                        ? Theme.of(context).colorScheme.background
+                        : null,
                     borderRadius: BorderRadius.circular(6.0),
                   ),
                   child: Column(
