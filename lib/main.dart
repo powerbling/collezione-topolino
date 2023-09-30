@@ -1,5 +1,5 @@
+import 'package:collezione_topolino/blocs/home_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
-import 'package:collezione_topolino/blocs/publication_bloc.dart';
 import 'package:collezione_topolino/services/api.dart';
 import 'package:collezione_topolino/services/database.dart';
 
@@ -24,11 +24,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<HomeBloc>(
+          create: (_) => HomeBloc(),
+        ),
         Provider<IssueBloc>(
           create: (_) => IssueBloc(API()),
-        ),
-        Provider<PublicationBloc>(
-          create: (_) => PublicationBloc(API()),
         ),
         ChangeNotifierProvider(
           create: (_) => DatabaseConnection(),

@@ -38,13 +38,16 @@ dependencies:
   intl: ^0.17.0
 
   # For image caching
-  cached_network_image: ^3.2.1
+  cached_network_image: ^3.2.3
 
 
   sqflite: ^2.0.3+1
   path: ^1.8.1
   provider: ^6.0.3
   rxdart: ^0.27.5
+
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
