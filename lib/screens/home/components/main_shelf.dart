@@ -1,13 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+
 import 'package:collezione_topolino/blocs/home_bloc.dart';
 import 'package:collezione_topolino/events/home_event.dart';
 import 'package:collezione_topolino/exceptions/explainable_exception.dart';
 import 'package:collezione_topolino/models/issue.dart';
 import 'package:collezione_topolino/state/home_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-
-import 'package:collezione_topolino/models/publication.dart';
 import 'package:collezione_topolino/models/physical_copy.dart';
 import 'package:collezione_topolino/services/database.dart';
 import 'package:collezione_topolino/components/order_select.dart';
@@ -31,7 +30,7 @@ class _MainShelfState extends State<MainShelf> {
   void initState() {
     super.initState();
     bloc = context.read<HomeBloc>();
-    bloc.add(const FetchDataEvent()); // Immediatly fetch data
+    bloc.add(const HomeFetchDataEvent()); // Immediatly fetch data
   }
 
   @override
@@ -46,7 +45,8 @@ class _MainShelfState extends State<MainShelf> {
         Expanded(
           child: RefreshIndicator(
               // notificationPredicate: (notification) => notification.depth == 4,
-              onRefresh: () => Future(() => bloc.add(const FetchDataEvent())),
+              onRefresh: () =>
+                  Future(() => bloc.add(const HomeFetchDataEvent())),
               child: BlocConsumer<HomeBloc, HomeState>(
                 listener: (context, state) {},
                 builder: (context, state) {

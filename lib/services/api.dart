@@ -1,6 +1,5 @@
 import 'package:collezione_topolino/exceptions/explainable_exception.dart';
 import 'package:collezione_topolino/models/issue.dart';
-import 'package:collezione_topolino/models/publication.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;

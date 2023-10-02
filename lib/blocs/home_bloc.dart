@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeInitialState()) {
-    on<FetchDataEvent>(_onFetchDataEvent);
+    on<HomeFetchDataEvent>(_onFetchDataEvent);
   }
 
   void _onFetchDataEvent(
-    FetchDataEvent event,
+    HomeFetchDataEvent event,
     Emitter<HomeState> emitter,
   ) async {
     emitter(const HomeLoadingState());

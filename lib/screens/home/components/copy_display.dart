@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collezione_topolino/models/issue.dart';
 import 'package:flutter/material.dart';
 
-import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/models/issue.dart';
 
 class CopyDisplay extends StatelessWidget {
   final IssueBase copy;
