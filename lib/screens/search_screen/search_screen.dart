@@ -19,13 +19,20 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
   Timer? _changeTimeout;
+  late SearchScreenBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read<SearchScreenBloc>();
+    bloc.add(const SearchScreenEmptySearchEvent());
+  }
 
   void _contentChanged(int? number) {
     if (_changeTimeout != null && _changeTimeout!.isActive) {
       _changeTimeout!.cancel();
     }
     _changeTimeout = Timer(const Duration(seconds: 1), () {
-      final bloc = context.read<SearchScreenBloc>();
       if (number == null) {
         bloc.add(const SearchScreenEmptySearchEvent());
       } else {
