@@ -1,10 +1,7 @@
-import 'package:collezione_topolino/models/issue.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:collezione_topolino/blocs/issue_bloc.dart';
+import 'package:collezione_topolino/models/issue.dart';
 import 'package:collezione_topolino/models/physical_copy.dart';
-import 'package:collezione_topolino/models/publication.dart';
 import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 
 import 'copy_display.dart';
@@ -38,11 +35,6 @@ class CopiesGrid extends StatelessWidget {
             child: Center(
               child: InkWell(
                 onTap: () {
-                  // Load data from api
-                  Provider.of<IssueBloc>(
-                    context,
-                    listen: false,
-                  ).query.sink.add(element.number);
                   // Push view
                   Navigator.of(context).push(
                     MaterialPageRoute(

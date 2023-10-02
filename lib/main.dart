@@ -1,5 +1,6 @@
 import 'package:collezione_topolino/blocs/home_bloc.dart';
 import 'package:collezione_topolino/blocs/issue_bloc.dart';
+import 'package:collezione_topolino/blocs/issue_screen_bloc.dart';
 import 'package:collezione_topolino/services/api.dart';
 import 'package:collezione_topolino/services/database.dart';
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider<IssueBloc>(
           create: (_) => IssueBloc(API()),
+        ),
+        Provider<IssueScreenBloc>(
+          create: (_) => IssueScreenBloc(),
         ),
         ChangeNotifierProvider(
           create: (_) => DatabaseConnection(),
