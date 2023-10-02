@@ -1,10 +1,12 @@
-import 'package:collezione_topolino/exceptions/explainable_exception.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:collezione_topolino/blocs/issue_bloc.dart';
-import 'package:collezione_topolino/models/issue.dart';
+import 'package:collezione_topolino/blocs/search_screen_bloc.dart';
+import 'package:collezione_topolino/events/search_screen_event.dart';
+import 'package:collezione_topolino/state/search_screen_state.dart';
 import 'package:collezione_topolino/screens/search_screen/components/result_element.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -16,7 +18,21 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  Issue? _result;
+  Timer? _changeTimeout;
+
+  void _contentChanged(int? number) {
+    if (_changeTimeout != null && _changeTimeout!.isActive) {
+      _changeTimeout!.cancel();
+    }
+    _changeTimeout = Timer(const Duration(seconds: 1), () {
+      final bloc = context.read<SearchScreenBloc>();
+      if (number == null) {
+        bloc.add(const SearchScreenEmptySearchEvent());
+      } else {
+        bloc.add(SearchScreenFetchDataEvent(issueNumber: number));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,35 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
               onChanged: (value) async {
                 final number = int.tryParse(value);
-                if (number == null) {
-                  setState(() {
-                    _result = null;
-                  });
-
-                  return;
-                }
-
-                // Query issue bloc
-                Provider.of<IssueBloc>(context, listen: false)
-                    .query
-                    .add(number);
-
-                try {
-                  final issue =
-                      await Provider.of<IssueBloc>(context, listen: false)
-                          .selected
-                          .first;
-
-                  setState(() {
-                    _result = issue;
-                  });
-                } on ExplainableException catch (e) {
-                  setState(() {
-                    _result = null;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("ERRORE: ${e.explainer}")));
-                }
+                _contentChanged(number);
 
                 // TODO Implement saved copies counter on result item
                 // // Widget may already be unmounted (after async call) so any
@@ -93,9 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   onPressed: () {
                     _controller.text = "";
-                    setState(() {
-                      _result = null;
-                    });
+                    _contentChanged(null);
                   },
                 ),
                 hintText: "Inserisci il numero...",
@@ -110,12 +96,28 @@ class _SearchScreenState extends State<SearchScreen> {
         child: SizedBox(
           width: double.infinity,
           height: 150.0,
-          child: () {
-            if (_result == null) {
-              return const Center(child: Text("Nessun risultato"));
-            }
-            return ResultElement(issue: _result!);
-          }(),
+          child: BlocConsumer<SearchScreenBloc, SearchScreenState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is SearchScreenLoadingState) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is SearchScreenErrorFetchingState) {
+                return const Center(
+                  child: Text("Nessun risultato per la ricerca effettuata,"
+                      "\ncontrolla il numero inserito."),
+                );
+              }
+              if (state is SearchScreenSuccessFetchingState) {
+                return ResultElement(issue: state.issue);
+              }
+              return const Center(
+                child: Text("Inserisci un numero per cercare."),
+              );
+            },
+          ),
         ),
       ),
     );
