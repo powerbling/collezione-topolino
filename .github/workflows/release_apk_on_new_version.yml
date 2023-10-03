@@ -2,6 +2,7 @@ on:
   push: 
     tags : 
       - v*
+  workflow_dispatch:
 jobs: 
   build-and-test: 
     runs-on: ubuntu-latest
@@ -16,11 +17,6 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-      env:
-        KEY_JKS: ${{ secrets.KEY_JKS }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
-        run: echo $KEY_JKS > key.jks 
     # Store the version, stripping any v-prefix
     - name: Write release version
       run: |
@@ -30,6 +26,12 @@ jobs:
     # get packages as you used to in your computer
     - name: Get Flutter Packages
       run: flutter pub get
+    - name: Setup apk KeyStore in the correct place
+      env:
+        KEY_JKS: ${{ secrets.KEY_JKS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
+        run: echo $KEY_JKS > /home/runner/work/collezione-topolino/collezione-topolino/android/key.jks
     # Now build apk
     - name: Build Flutter Application
       run: flutter build apk --release --build-name $VERSION
