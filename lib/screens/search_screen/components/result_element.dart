@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:collezione_topolino/blocs/issue_bloc.dart';
-import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/models/issue.dart';
 import 'package:collezione_topolino/screens/issue_screen/issue_screen.dart';
 
 class ResultElement extends StatelessWidget {
-  final Publication publ;
+  final Issue issue;
 
   const ResultElement({
     super.key,
-    required this.publ,
+    required this.issue,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Query database and api
-        Provider.of<IssueBloc>(
-          context,
-          listen: false,
-        ).query.sink.add(publ.number);
-
         // Push view
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => IssueScreen(issueNumber: publ.number),
+            builder: (context) => IssueScreen(issueNumber: issue.number),
           ),
         );
       },
@@ -49,7 +41,7 @@ class ResultElement extends StatelessWidget {
                 width: 100.0,
                 child: Center(
                   child: CachedNetworkImage(
-                    imageUrl: publ.imgUrl,
+                    imageUrl: issue.imgUrl ?? "http://invalid.url",
                     imageBuilder: (context, imageProvider) {
                       return Container(
                         height: 100.0,
@@ -91,7 +83,7 @@ class ResultElement extends StatelessWidget {
                       padding: const EdgeInsets.all(20.0),
                       child: Center(
                           child: Text(
-                        "Topolino n.${publ.number}",
+                        "Topolino n.${issue.number}",
                         style: Theme.of(context).textTheme.titleLarge,
                       )),
                     ),

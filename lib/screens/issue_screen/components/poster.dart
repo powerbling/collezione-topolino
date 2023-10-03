@@ -10,6 +10,8 @@ class Poster extends StatelessWidget {
   }) : super(key: key);
 
   final Issue? issue;
+  static const double correctHeight = 450.0;
+  static const double correctWidth = correctHeight * 0.739; // Correct aspect-ratio
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,12 @@ class Poster extends StatelessWidget {
           // Use lower resolution image as placeholder to avoid
           // too much visible buffering
           imageUrl: issue?.imgUrl ?? "",
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(),
+          placeholder: (context, url) => const SizedBox(
+            height: correctHeight,
+            width: correctWidth,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
           imageBuilder: imageBuilder,
         ),
@@ -37,8 +43,8 @@ class Poster extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
-        height: 450.0,
-        width: 450.0 * 0.739, // Correct aspect-ratio
+        height: correctHeight,
+        width: correctWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: imageProvider,

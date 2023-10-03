@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:collezione_topolino/blocs/publication_bloc.dart';
-import 'package:collezione_topolino/models/publication.dart';
+import 'package:collezione_topolino/blocs/search_screen_bloc.dart';
+import 'package:collezione_topolino/events/search_screen_event.dart';
+import 'package:collezione_topolino/state/search_screen_state.dart';
 import 'package:collezione_topolino/screens/search_screen/components/result_element.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -15,7 +18,30 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  Publication? _result;
+  Timer? _changeTimeout;
+  late SearchScreenBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bloc = context.read<SearchScreenBloc>();
+    bloc.add(const SearchScreenEmptySearchEvent());
+  }
+
+  void _contentChanged(int? number) {
+    // Make shure typing has stopped to avoid making too many requests
+    if (_changeTimeout != null && _changeTimeout!.isActive) {
+      _changeTimeout!.cancel();
+    }
+    _changeTimeout = Timer(const Duration(seconds: 1), () {
+      if (number == null) {
+        bloc.add(const SearchScreenEmptySearchEvent());
+      } else {
+        bloc.add(SearchScreenFetchDataEvent(issueNumber: number));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,45 +67,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
               onChanged: (value) async {
                 final number = int.tryParse(value);
-                if (number == null) {
-                  setState(() {
-                    _result = null;
-                  });
-
-                  return;
-                }
-
-                // Take parsed publications
-                final pubList = await Provider.of<PublicationBloc>(
-                  context,
-                  listen: false,
-                ).results.first;
-
-                // Filter publication by number
-                final filtered = pubList
-                    .where((publication) => publication.number == number);
-
-                if (filtered.isEmpty) {
-                  setState(() {
-                    _result = null;
-                  });
-                  return;
-                }
+                _contentChanged(number);
 
                 // TODO Implement saved copies counter on result item
-                // // Widget may already be unmounted (after async call) so any
-                // // code running could cause unwanted behavior
-                // if (!mounted) return;
-
-                // // Ask for saved copies
-                // Provider.of<DatabaseBloc>(
-                //   context,
-                //   listen: false,
-                // ).querySink.add(FetchByNumberEvent(number));
-
-                setState(() {
-                  _result = filtered.first;
-                });
               },
               decoration: InputDecoration(
                 prefixIcon:
@@ -91,9 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   onPressed: () {
                     _controller.text = "";
-                    setState(() {
-                      _result = null;
-                    });
+                    _contentChanged(null);
                   },
                 ),
                 hintText: "Inserisci il numero...",
@@ -108,12 +96,28 @@ class _SearchScreenState extends State<SearchScreen> {
         child: SizedBox(
           width: double.infinity,
           height: 150.0,
-          child: () {
-            if (_result == null) {
-              return const Center(child: Text("Nessun risultato"));
-            }
-            return ResultElement(publ: _result!);
-          }(),
+          child: BlocConsumer<SearchScreenBloc, SearchScreenState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is SearchScreenLoadingState) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is SearchScreenErrorFetchingState) {
+                return const Center(
+                  child: Text("Nessun risultato per la ricerca effettuata,"
+                      "\ncontrolla il numero inserito."),
+                );
+              }
+              if (state is SearchScreenSuccessFetchingState) {
+                return ResultElement(issue: state.issue);
+              }
+              return const Center(
+                child: Text("Inserisci un numero per cercare."),
+              );
+            },
+          ),
         ),
       ),
     );
