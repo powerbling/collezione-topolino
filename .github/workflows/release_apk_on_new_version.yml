@@ -1,8 +1,6 @@
 on: 
-  push: 
-    tags : 
-      - v*
-  workflow_dispatch:
+  release:
+    types: [published]
 jobs: 
   build-and-test: 
     runs-on: ubuntu-latest
