@@ -31,7 +31,7 @@ jobs:
         KEY_JKS: ${{ secrets.KEY_JKS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
-        run: echo $KEY_JKS > /home/runner/work/collezione-topolino/collezione-topolino/android/key.jks
+      run: echo $KEY_JKS > /home/runner/work/collezione-topolino/collezione-topolino/android/key.jks
     # Now build apk
     - name: Build Flutter Application
       run: flutter build apk --release --build-name $VERSION
