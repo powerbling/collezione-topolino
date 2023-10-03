@@ -16,6 +16,11 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
+      env:
+        KEY_JKS: ${{ secrets.KEY_JKS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
+        run: echo $KEY_JKS > key.jks 
     # Store the version, stripping any v-prefix
     - name: Write release version
       run: |
@@ -27,7 +32,7 @@ jobs:
       run: flutter pub get
     # Now build apk
     - name: Build Flutter Application
-      run: flutter build apk --build-name $VERSION
+      run: flutter build apk --release --build-name $VERSION
     # release the build
     - name: Upload Release APK
       uses: softprops/action-gh-release@v1
