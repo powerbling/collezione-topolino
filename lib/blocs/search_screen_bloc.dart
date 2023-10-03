@@ -1,7 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:collezione_topolino/events/search_screen_event.dart';
 import 'package:collezione_topolino/services/api.dart';
 import 'package:collezione_topolino/state/search_screen_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
   SearchScreenBloc() : super(const SearchScreenInitialState()) {

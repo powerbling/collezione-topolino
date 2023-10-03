@@ -1,6 +1,6 @@
-import 'package:collezione_topolino/models/issue.dart';
-
 import 'package:equatable/equatable.dart';
+
+import 'package:collezione_topolino/models/issue.dart';
 
 abstract class IssueScreenState extends Equatable {
   const IssueScreenState();

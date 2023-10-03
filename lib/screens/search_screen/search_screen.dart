@@ -24,11 +24,13 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+
     bloc = context.read<SearchScreenBloc>();
     bloc.add(const SearchScreenEmptySearchEvent());
   }
 
   void _contentChanged(int? number) {
+    // Make shure typing has stopped to avoid making too many requests
     if (_changeTimeout != null && _changeTimeout!.isActive) {
       _changeTimeout!.cancel();
     }
@@ -68,15 +70,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 _contentChanged(number);
 
                 // TODO Implement saved copies counter on result item
-                // // Widget may already be unmounted (after async call) so any
-                // // code running could cause unwanted behavior
-                // if (!mounted) return;
-
-                // // Ask for saved copies
-                // Provider.of<DatabaseBloc>(
-                //   context,
-                //   listen: false,
-                // ).querySink.add(FetchByNumberEvent(number));
               },
               decoration: InputDecoration(
                 prefixIcon:

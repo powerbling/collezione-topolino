@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/physical_copy.dart';
-import '../../../services/database.dart';
+import 'package:collezione_topolino/models/physical_copy.dart';
+import 'package:collezione_topolino/services/database.dart';
 
 class CopiesListEntry extends StatelessWidget {
   CopiesListEntry({
